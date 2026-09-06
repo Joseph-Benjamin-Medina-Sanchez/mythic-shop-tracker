@@ -25,5 +25,18 @@
       "riven_spirit_blossom_event",
       "vayne_sentinel_event"
     ]
+  },
+  {
+    "date": "2026-09-06",
+    "chromaIds": [
+      "evelynn_soul_fighter_limitless",
+      "sivir_odyssey_merc",
+      "zoe_prestige_eternal_vivid",
+      "annie_winterblessed_wreathguard",
+      "evelynn_sugar_rush_sweet_tooth",
+      "ezreal_heartsteel_rockstar",
+      "taliyah_star_guardian_brilliant",
+      "qiyana_la_ilusion_vivida"
+    ]
   }
 ]

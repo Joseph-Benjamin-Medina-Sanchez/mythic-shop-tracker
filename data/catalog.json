@@ -110,5 +110,61 @@
     "champion": "Katarina",
     "costMe": 35,
     "isMythic": false
+  },
+  {
+    "id": "evelynn_soul_fighter_limitless",
+    "name": "Soul Fighter Evelynn (Limitless)",
+    "champion": "Evelynn",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "sivir_odyssey_merc",
+    "name": "Odyssey Sivir (Merc)",
+    "champion": "Sivir",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "zoe_prestige_eternal_vivid",
+    "name": "Prestige Eternal Aspect Zoe (Vivid)",
+    "champion": "Zoe",
+    "costMe": 35,
+    "isMythic": true
+  },
+  {
+    "id": "annie_winterblessed_wreathguard",
+    "name": "Winterblessed Annie (Wreathguard)",
+    "champion": "Annie",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "evelynn_sugar_rush_sweet_tooth",
+    "name": "Sugar Rush Evelynn (Sweet Tooth)",
+    "champion": "Evelynn",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "ezreal_heartsteel_rockstar",
+    "name": "HEARTSTEEL Ezreal (Rockstar)",
+    "champion": "Ezreal",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "taliyah_star_guardian_brilliant",
+    "name": "Star Guardian Taliyah (Brilliant)",
+    "champion": "Taliyah",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "qiyana_la_ilusion_vivida",
+    "name": "La Ilusión Qiyana (Vivida)",
+    "champion": "Qiyana",
+    "costMe": 35,
+    "isMythic": false
   }
 ]

@@ -45,6 +45,7 @@ function renderSelectOptions(items) {
 function setupListeners() {
   const select = document.getElementById('chromaSelect');
   const searchInput = document.getElementById('chromaSearch');
+  const btnSync = document.getElementById('btnSync');
 
   select.addEventListener('change', (e) => {
     currentTargetId = e.target.value;
@@ -65,7 +66,26 @@ function setupListeners() {
       const match = filtered.find((i) => i.id === currentTargetId) || filtered[0];
       currentTargetId = match.id;
       select.value = currentTargetId;
-      fetchMetrics(currentTargetId);git 
+      fetchMetrics(currentTargetId);
+    }
+  });
+
+  btnSync.addEventListener('click', async () => {
+    btnSync.disabled = true;
+    btnSync.innerText = '⟳ Sincronizando...';
+
+    try {
+      const res = await fetch('/api/sync', { method: 'POST' });
+      const result = await res.json();
+      await loadCatalog();
+      await fetchMetrics(currentTargetId);
+      alert(result.message || 'Sincronización completada.');
+    } catch (error) {
+      console.error('Error in sync:', error);
+      alert('No se pudo sincronizar la rotación en vivo.');
+    } finally {
+      btnSync.disabled = false;
+      btnSync.innerText = '⟳ Sincronizar Tienda';
     }
   });
 }

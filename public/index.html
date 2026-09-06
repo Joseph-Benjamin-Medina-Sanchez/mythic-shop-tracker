@@ -22,7 +22,12 @@
 
   <main class="dashboard-container">
     <section class="control-panel-card">
-      <label for="chromaSearch" class="panel-label">BUSCAR Y SELECCIONAR OBJETIVO</label>
+      <div class="panel-header-row">
+        <label for="chromaSearch" class="panel-label">BUSCAR Y SELECCIONAR OBJETIVO</label>
+        <button id="btnSync" class="btn-sync">
+          <span>⟳ Sincronizar Tienda</span>
+        </button>
+      </div>
       <div class="search-bar-row">
         <input type="text" id="chromaSearch" placeholder="Escribe para filtrar por campeón o nombre..." autocomplete="off">
         <select id="chromaSelect"></select>

@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { StorageService } from './services/StorageService.js';
+import { SyncService } from './services/SyncService.js';
 import { ProbabilityEngine } from './engine/ProbabilityEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
 const storage = new StorageService(path.join(__dirname, '../data'));
+const syncService = new SyncService(storage);
 
 let catalog = [];
 let history = [];
@@ -72,6 +74,23 @@ app.get('/api/metrics', (req, res) => {
       })),
     })),
   });
+});
+
+app.post('/api/sync', async (req, res) => {
+  try {
+    const result = await syncService.sync();
+    catalog = result.catalog;
+    history = result.history;
+    engine = new ProbabilityEngine(catalog, 8);
+
+    res.json({
+      message: result.isNewRotation ? 'Nueva rotación registrada.' : 'La rotación de hoy ya estaba registrada.',
+      date: result.date,
+      count: result.count,
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Fallo al sincronizar con la fuente en vivo.' });
+  }
 });
 
 bootstrap();
