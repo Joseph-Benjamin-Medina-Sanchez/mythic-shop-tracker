@@ -38,6 +38,20 @@
       </div>
     </section>
 
+    <section class="control-panel-card" id="manualEntrySection">
+      <div class="panel-header-row">
+        <label class="panel-label">REGISTRAR ROTACIÓN MANUAL</label>
+      </div>
+      <div class="search-bar-row">
+        <input type="date" id="manualDate">
+        <input type="text" id="manualChromaSearch" placeholder="Buscar chroma para agregar a la rotación..." autocomplete="off">
+      </div>
+      <div class="rotation-chips" id="manualSelectedChips"></div>
+      <div class="manual-entry-list" id="manualChromaOptions"></div>
+      <button id="btnSubmitRotation" class="btn-sync">Registrar Rotación</button>
+      <p class="manual-feedback" id="manualFeedback"></p>
+    </section>
+
     <section class="hero-target-card" id="targetSection">
       <div class="target-badge">OBJETIVO SELECCIONADO</div>
       <h2 id="targetName">Cargando objetivo...</h2>
@@ -45,6 +59,7 @@
         <span class="meta-item"><strong>Campeón:</strong> <span id="targetChampion">-</span></span>
         <span class="meta-item"><strong>Costo:</strong> <span id="targetCost">-</span> ME</span>
         <span class="meta-item status-pill" id="targetStatus">Consultando...</span>
+        <span class="meta-item" id="targetDaysAgo"></span>
       </div>
     </section>
 

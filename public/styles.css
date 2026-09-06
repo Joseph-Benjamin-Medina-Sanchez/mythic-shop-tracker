@@ -405,3 +405,38 @@ body {
   color: var(--text-muted);
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
+
+.manual-entry-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding-right: 0.4rem;
+}
+
+.manual-entry-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  cursor: pointer;
+}
+
+.manual-entry-option input {
+  accent-color: var(--accent-cyan);
+}
+
+.manual-feedback {
+  font-size: 0.85rem;
+  min-height: 1.2rem;
+}
+
+.manual-feedback-success {
+  color: var(--success);
+}
+
+.manual-feedback-error {
+  color: var(--danger);
+}

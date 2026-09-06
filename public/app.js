@@ -1,5 +1,6 @@
 let fullCatalog = [];
 let currentTargetId = '';
+const selectedChromaIds = new Set();
 
 document.addEventListener('DOMContentLoaded', async () => {
   startCountdownTimer();
@@ -53,6 +54,7 @@ async function loadCatalog() {
       currentTargetId = fullCatalog[0].id;
     }
     renderSelectOptions(fullCatalog);
+    renderManualChromaOptions(fullCatalog);
   } catch (error) {
     console.error('Error loading catalog:', error);
   }
@@ -110,13 +112,133 @@ function setupListeners() {
       const result = await res.json();
       await loadCatalog();
       await fetchMetrics(currentTargetId);
-      alert(result.message || 'Sincronización completada.');
+      alert(result.message || result.error || 'Sincronización completada.');
     } catch (error) {
       console.error('Error in sync:', error);
       alert('No se pudo sincronizar la rotación en vivo.');
     } finally {
       btnSync.disabled = false;
       btnSync.innerText = '⟳ Sincronizar Tienda';
+    }
+  });
+
+  setupManualEntryListeners();
+}
+
+function renderManualChromaOptions(items) {
+  const container = document.getElementById('manualChromaOptions');
+  container.innerHTML = '';
+
+  items.forEach((chroma) => {
+    const label = document.createElement('label');
+    label.className = 'manual-entry-option';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = chroma.id;
+    checkbox.checked = selectedChromaIds.has(chroma.id);
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        selectedChromaIds.add(chroma.id);
+      } else {
+        selectedChromaIds.delete(chroma.id);
+      }
+      renderManualSelectedChips();
+    });
+
+    label.appendChild(checkbox);
+    label.append(`${chroma.champion} - ${chroma.name}`);
+    container.appendChild(label);
+  });
+}
+
+function renderManualSelectedChips() {
+  const container = document.getElementById('manualSelectedChips');
+  container.innerHTML = '';
+
+  selectedChromaIds.forEach((id) => {
+    const chroma = fullCatalog.find((c) => c.id === id);
+    if (!chroma) {
+      return;
+    }
+
+    const chip = document.createElement('span');
+    chip.className = 'chip chip-active-target';
+    chip.innerText = `${chroma.name} ✕`;
+    chip.style.cursor = 'pointer';
+    chip.addEventListener('click', () => {
+      selectedChromaIds.delete(id);
+      renderManualSelectedChips();
+      renderManualChromaOptions(filterCatalog(document.getElementById('manualChromaSearch').value));
+    });
+    container.appendChild(chip);
+  });
+}
+
+function filterCatalog(term) {
+  const normalized = term.toLowerCase().trim();
+  if (!normalized) {
+    return fullCatalog;
+  }
+  return fullCatalog.filter(
+    (item) =>
+      item.champion.toLowerCase().includes(normalized) ||
+      item.name.toLowerCase().includes(normalized)
+  );
+}
+
+function setupManualEntryListeners() {
+  const manualSearch = document.getElementById('manualChromaSearch');
+  const manualDate = document.getElementById('manualDate');
+  const btnSubmit = document.getElementById('btnSubmitRotation');
+  const feedback = document.getElementById('manualFeedback');
+
+  manualSearch.addEventListener('input', (e) => {
+    renderManualChromaOptions(filterCatalog(e.target.value));
+  });
+
+  btnSubmit.addEventListener('click', async () => {
+    feedback.className = 'manual-feedback';
+    feedback.innerText = '';
+
+    if (!manualDate.value) {
+      feedback.className = 'manual-feedback manual-feedback-error';
+      feedback.innerText = 'Selecciona una fecha.';
+      return;
+    }
+
+    if (selectedChromaIds.size === 0) {
+      feedback.className = 'manual-feedback manual-feedback-error';
+      feedback.innerText = 'Selecciona al menos un chroma.';
+      return;
+    }
+
+    btnSubmit.disabled = true;
+
+    try {
+      const res = await fetch('/api/rotations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ date: manualDate.value, chromaIds: Array.from(selectedChromaIds) }),
+      });
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || 'No se pudo registrar la rotación.');
+      }
+
+      feedback.className = 'manual-feedback manual-feedback-success';
+      feedback.innerText = result.message;
+      selectedChromaIds.clear();
+      renderManualSelectedChips();
+      renderManualChromaOptions(fullCatalog);
+      manualDate.value = '';
+      await fetchMetrics(currentTargetId);
+    } catch (error) {
+      feedback.className = 'manual-feedback manual-feedback-error';
+      feedback.innerText = error.message;
+    } finally {
+      btnSubmit.disabled = false;
     }
   });
 }
@@ -146,6 +268,13 @@ function renderDashboard(data) {
   const statusEl = document.getElementById('targetStatus');
   statusEl.innerText = metrics.status;
   statusEl.className = 'meta-item status-pill ' + (metrics.isEligible ? 'status-eligible' : 'status-cooldown');
+
+  const daysAgoEl = document.getElementById('targetDaysAgo');
+  if (metrics.daysSinceLastSeen !== null) {
+    daysAgoEl.innerText = `Hace ${Math.max(0, metrics.daysSinceLastSeen)} día(s)`;
+  } else {
+    daysAgoEl.innerText = '';
+  }
 
   const percentage = metrics.nextWeekProbability;
   document.getElementById('probPercent').innerText = `${percentage}%`;
