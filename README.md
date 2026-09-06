@@ -7,12 +7,12 @@
 
 A full-stack JavaScript application designed to model, track, and forecast the rotation of exclusive event and mythic cosmetics in the League of Legends Mythic Shop.
 
-## 📌 Problem Overview
+##  Problem Overview
 In the updated League of Legends store rotation architecture, 8 exclusive chromas rotate every 7 days (Wednesday at 4:00 PM PST / Thursday 00:00:00 UTC) without prior announcement in patch notes. 
 
 This project provides an automated tracking system and a **sampling without replacement (with cooldown)** probability engine to determine the likelihood of target items appearing in upcoming weekly cycles.
 
-## 🚀 Key Features
+##  Key Features
 * **Discrete Probability Engine:** Evaluates pool exhaustion and conditional probability per rotation.
 * **Dynamic Target Selector:** Real-time search and filter across the complete cosmetic catalog.
 * **Decoupled Persistence Layer:** Clean separation between business models, repository storage, and REST controllers.
@@ -20,7 +20,7 @@ This project provides an automated tracking system and a **sampling without repl
 * **Official Reset Countdown:** Real-time timer synchronised with Riot's global reset schedule.
 * **Automated CI Pipeline:** Continuous integration workflow verifying unit tests on multiple Node.js runtimes.
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 [ Frontend: HTML5 / CSS3 / Vanilla JS ]
 │  (HTTP / Fetch)
 ▼
@@ -34,7 +34,7 @@ This project provides an automated tracking system and a **sampling without repl
 [ StorageService ]   [ ProbabilityEngine ]
 (data/*.json)     (Domain Math Models)
 
-## 📡 REST API Reference
+##  REST API Reference
 
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
@@ -42,7 +42,7 @@ This project provides an automated tracking system and a **sampling without repl
 | `GET` | `/api/metrics?targetId=:id` | Returns probability metrics and history for a given target. |
 | `POST` | `/api/sync` | Ingests the latest live rotation and updates the local store. |
 
-## 🛠️ Getting Started
+##  Getting Started
 
 ### Prerequisites
 * Node.js v18.0.0 or higher
