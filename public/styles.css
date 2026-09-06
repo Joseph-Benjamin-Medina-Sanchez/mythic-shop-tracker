@@ -45,7 +45,7 @@ body {
 .app-header {
   position: relative;
   z-index: 1;
-  padding: 2.5rem 1rem 1.5rem;
+  padding: 2.2rem 1rem 1.6rem;
   text-align: center;
   border-bottom: 1px solid var(--bg-card-border);
 }
@@ -68,6 +68,33 @@ body {
 .subtitle {
   color: var(--text-muted);
   font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(10, 20, 35, 0.9);
+  border: 1px solid var(--gold-primary);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(200, 170, 110, 0.15);
+}
+
+.countdown-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--gold-primary);
+}
+
+.countdown-timer {
+  font-family: monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  letter-spacing: 1px;
 }
 
 .dashboard-container {

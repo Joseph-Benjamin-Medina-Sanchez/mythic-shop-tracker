@@ -2,8 +2,39 @@ let fullCatalog = [];
 let currentTargetId = '';
 
 document.addEventListener('DOMContentLoaded', async () => {
+  startCountdownTimer();
   await initializeApp();
 });
+
+function startCountdownTimer() {
+  const timerElement = document.getElementById('countdownTimer');
+
+  function update() {
+    const now = new Date();
+    const nextReset = new Date(now.getTime());
+
+    const currentDay = nextReset.getUTCDay();
+    const daysUntilThursday = (4 - currentDay + 7) % 7;
+
+    nextReset.setUTCDate(nextReset.getUTCDate() + daysUntilThursday);
+    nextReset.setUTCHours(0, 0, 0, 0);
+
+    if (nextReset <= now) {
+      nextReset.setUTCDate(nextReset.getUTCDate() + 7);
+    }
+
+    const diff = nextReset - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    timerElement.innerText = `${days}d ${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+  }
+
+  update();
+  setInterval(update, 1000);
+}
 
 async function initializeApp() {
   await loadCatalog();
