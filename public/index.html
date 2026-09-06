@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mythic Shop Tracker | League of Legends</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-overlay"></div>
+
+  <header class="app-header">
+    <div class="header-container">
+      <span class="badge-subtitle">LEAGUE OF LEGENDS</span>
+      <h1>MYTHIC SHOP TRACKER</h1>
+      <p class="subtitle">Monitoreo de rotaciones semanales y estimación de probabilidad de cosméticos</p>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <section class="hero-target-card" id="targetSection">
+      <div class="target-badge">OBJETIVO PRINCIPAL</div>
+      <h2 id="targetName">Cargando objetivo...</h2>
+      <div class="target-meta">
+        <span class="meta-item"><strong>Campeón:</strong> <span id="targetChampion">-</span></span>
+        <span class="meta-item"><strong>Costo:</strong> <span id="targetCost">-</span> ME</span>
+        <span class="meta-item status-pill" id="targetStatus">Consultando...</span>
+      </div>
+    </section>
+
+    <section class="thermometer-card">
+      <div class="thermometer-header">
+        <div>
+          <h3>Probabilidad Próximo Miércoles</h3>
+          <p class="text-muted">Estimación condicional sobre el pool restante sin repetición</p>
+        </div>
+        <div class="prob-percentage" id="probPercent">0%</div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="probProgress"></div>
+      </div>
+    </section>
+
+    <section class="metrics-grid">
+      <div class="metric-card">
+        <span class="metric-title">Catálogo Total</span>
+        <span class="metric-value" id="valTotal">0</span>
+        <span class="metric-desc">Chromas exclusivos registrados</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Descartados (Ciclo Actual)</span>
+        <span class="metric-value text-accent" id="valDiscarded">0</span>
+        <span class="metric-desc">Ya aparecieron en rotación</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Candidatos Restantes</span>
+        <span class="metric-value" id="valRemaining">0</span>
+        <span class="metric-desc">Pool activo de selección</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-title">Agotamiento del Pool</span>
+        <span class="metric-value text-gold" id="valDepletion">0%</span>
+        <span class="metric-desc">Avance del ciclo sin Zed</span>
+      </div>
+    </section>
+
+    <section class="history-section">
+      <div class="section-header">
+        <h3>Historial de Rotaciones Semanales</h3>
+        <span class="reset-tag">Reinicio: Miércoles 4:00 PM PST</span>
+      </div>
+      <div class="history-list" id="historyList"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Mythic Shop Tracker &bull; Desarrollado por Joseph Medina</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

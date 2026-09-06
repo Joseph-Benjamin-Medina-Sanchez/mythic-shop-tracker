@@ -1,18 +1,24 @@
 {
   "name": "mythic-shop-tracker",
   "version": "1.0.0",
-  "description": "Discrete probability estimator and rotation tracking engine for League of Legends Mythic Shop cosmetics.",
+  "description": "Discrete probability estimator and rotation tracking web dashboard for League of Legends Mythic Shop cosmetics.",
   "type": "module",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node src/server.js",
+    "cli": "node src/index.js",
     "test": "node --test"
   },
   "keywords": [
     "league-of-legends",
     "mythic-shop",
-    "probability-engine"
+    "probability-engine",
+    "express",
+    "web-dashboard"
   ],
   "author": "Joseph Medina",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
 }

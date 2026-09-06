@@ -12,7 +12,7 @@ This project implements a sampling without replacement probability model to quan
 * **Engine (`src/engine/`):** Pure mathematical calculations decoupled from I/O.
 * **Zero Dependencies:** Built on native ECMAScript modules and verified with `node:test`.
 
-## 🚀 Getting Started
+##  Getting Started
 
 ```bash
 npm start
