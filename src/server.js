@@ -4,6 +4,9 @@ import { fileURLToPath } from 'node:url';
 import { DatabaseService } from './services/DatabaseService.js';
 import { ScraperService } from './services/ScraperService.js';
 import { ProbabilityEngine } from './engine/ProbabilityEngine.js';
+import cron from 'node-cron';
+
+const SYNC_SCHEDULE = '0 0 * * *';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -115,6 +118,20 @@ app.post('/api/sync', async (req, res) => {
     });
   }
 });
+
+async function runScheduledSync() {
+  try {
+    const result = await scraperService.sync();
+    refreshState();
+    console.log(
+      `[sync automático] ${result.isNewRotation ? 'nueva rotación registrada' : 'la rotación ya existía'} (${result.date}, ${result.count} items)`
+    );
+  } catch (error) {
+    console.error(`[sync automático] falló: ${error.message}`);
+  }
+}
+
+cron.schedule(SYNC_SCHEDULE, runScheduledSync);
 
 refreshState();
 app.listen(PORT, () => {
