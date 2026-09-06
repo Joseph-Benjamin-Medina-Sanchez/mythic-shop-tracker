@@ -12,7 +12,9 @@
   "scripts": {
     "start": "node src/server.js",
     "migrate": "node scripts/migrate.js",
-    "test": "node --test"
+    "test": "node --test",
+    "inspect:source": "node scripts/inspect-rotations-source.js",
+    "delete-rotation": "node scripts/delete-rotation.js"
   },
   "keywords": [
     "league-of-legends",
@@ -24,6 +26,7 @@
   "author": "Joseph Medina",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "puppeteer": "^24.0.0"
   }
 }

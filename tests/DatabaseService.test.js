@@ -51,3 +51,17 @@ test('DatabaseService: getHistory devuelve las rotaciones ordenadas con sus chro
   assert.equal(history[1].date, '2026-09-08');
   assert.equal(history[0].chromas[0].id, 'a');
 });
+
+test('DatabaseService: si un chroma_id no existe, no deja una rotación huérfana', () => {
+  const db = createInMemoryDb();
+
+  db.upsertCatalog([{ id: 'a', name: 'A', champion: 'Zed' }]);
+
+  assert.throws(() => db.insertRotation('2026-09-01', 'manual', ['a', 'no_existe']));
+  assert.equal(db.hasRotationOn('2026-09-01'), false);
+
+  const retryInsert = db.insertRotation('2026-09-01', 'manual', ['a']);
+  db.close();
+
+  assert.ok(retryInsert !== null);
+});

@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DatabaseService } from './services/DatabaseService.js';
+import { ScraperService } from './services/ScraperService.js';
 import { ProbabilityEngine } from './engine/ProbabilityEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,6 +15,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
 const db = new DatabaseService(path.join(__dirname, '../data/mythic.db'));
+const scraperService = new ScraperService(db);
 
 let catalog = [];
 let history = [];
@@ -95,8 +97,23 @@ app.get('/api/metrics', (req, res) => {
   });
 });
 
-app.post('/api/sync', (req, res) => {
-  res.status(501).json({ message: 'Sincronización automática pendiente. Registra la rotación manualmente por ahora.' });
+app.post('/api/sync', async (req, res) => {
+  try {
+    const result = await scraperService.sync();
+    refreshState();
+
+    res.json({
+      message: result.isNewRotation
+        ? 'Nueva rotación registrada desde rotations.lol.'
+        : 'La rotación de hoy ya estaba registrada.',
+      date: result.date,
+      count: result.count,
+    });
+  } catch (error) {
+    res.status(502).json({
+      error: `No se pudo sincronizar con la fuente en vivo: ${error.message}. Usa el registro manual mientras tanto.`,
+    });
+  }
 });
 
 refreshState();

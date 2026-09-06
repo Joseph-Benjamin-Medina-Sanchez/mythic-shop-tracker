@@ -62,21 +62,39 @@ export class DatabaseService {
     return Boolean(this.db.prepare('SELECT 1 FROM rotations WHERE rotation_date = ?').get(date));
   }
 
-  insertRotation(date, source, chromaIds) {
+    deleteRotation(date) {
+    const rotation = this.db.prepare('SELECT id FROM rotations WHERE rotation_date = ?').get(date);
+    if (!rotation) {
+      return false;
+    }
+
+    this.db.prepare('DELETE FROM rotation_items WHERE rotation_id = ?').run(rotation.id);
+    this.db.prepare('DELETE FROM rotations WHERE id = ?').run(rotation.id);
+    return true;
+  }
+
+ insertRotation(date, source, chromaIds) {
     if (this.hasRotationOn(date)) {
       return null;
     }
 
-    const { lastInsertRowid } = this.db
-      .prepare('INSERT INTO rotations (rotation_date, source) VALUES (?, ?)')
-      .run(date, source);
+    this.db.exec('BEGIN');
+    try {
+      const { lastInsertRowid } = this.db
+        .prepare('INSERT INTO rotations (rotation_date, source) VALUES (?, ?)')
+        .run(date, source);
 
-    const insertItem = this.db.prepare('INSERT INTO rotation_items (rotation_id, chroma_id) VALUES (?, ?)');
-    for (const chromaId of chromaIds) {
-      insertItem.run(lastInsertRowid, chromaId);
+      const insertItem = this.db.prepare('INSERT INTO rotation_items (rotation_id, chroma_id) VALUES (?, ?)');
+      for (const chromaId of chromaIds) {
+        insertItem.run(lastInsertRowid, chromaId);
+      }
+
+      this.db.exec('COMMIT');
+      return lastInsertRowid;
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
     }
-
-    return lastInsertRowid;
   }
 
   getHistory() {
