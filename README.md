@@ -45,7 +45,7 @@ This project provides an automated tracking system and a **sampling without repl
 ##  Getting Started
 
 ### Prerequisites
-* Node.js v18.0.0 or higher
+* Node.js v22.0.0 or higher
 
 ### Installation
 ```bash
