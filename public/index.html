@@ -21,8 +21,16 @@
   </header>
 
   <main class="dashboard-container">
+    <section class="control-panel-card">
+      <label for="chromaSearch" class="panel-label">BUSCAR Y SELECCIONAR OBJETIVO</label>
+      <div class="search-bar-row">
+        <input type="text" id="chromaSearch" placeholder="Escribe para filtrar por campeón o nombre..." autocomplete="off">
+        <select id="chromaSelect"></select>
+      </div>
+    </section>
+
     <section class="hero-target-card" id="targetSection">
-      <div class="target-badge">OBJETIVO PRINCIPAL</div>
+      <div class="target-badge">OBJETIVO SELECCIONADO</div>
       <h2 id="targetName">Cargando objetivo...</h2>
       <div class="target-meta">
         <span class="meta-item"><strong>Campeón:</strong> <span id="targetChampion">-</span></span>
@@ -63,7 +71,7 @@
       <div class="metric-card">
         <span class="metric-title">Agotamiento del Pool</span>
         <span class="metric-value text-gold" id="valDepletion">0%</span>
-        <span class="metric-desc">Avance del ciclo sin Zed</span>
+        <span class="metric-desc">Avance del ciclo sin este ítem</span>
       </div>
     </section>
 

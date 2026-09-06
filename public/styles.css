@@ -81,6 +81,57 @@ body {
   gap: 1.5rem;
 }
 
+.control-panel-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-card-border);
+  border-radius: 8px;
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.panel-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--gold-primary);
+}
+
+.search-bar-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-bar-row input,
+.search-bar-row select {
+  background: rgba(5, 10, 18, 0.9);
+  border: 1px solid rgba(200, 170, 110, 0.4);
+  color: var(--gold-light);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar-row input {
+  flex: 1 1 280px;
+}
+
+.search-bar-row select {
+  flex: 2 1 340px;
+  cursor: pointer;
+}
+
+.search-bar-row input:focus,
+.search-bar-row select:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(10, 200, 185, 0.3);
+}
+
 .hero-target-card {
   background: linear-gradient(135deg, rgba(20, 30, 48, 0.85) 0%, rgba(13, 22, 38, 0.85) 100%);
   border: 1px solid var(--gold-primary);
@@ -116,12 +167,21 @@ body {
 }
 
 .status-pill {
-  background: rgba(30, 226, 160, 0.15);
-  color: var(--success);
-  border: 1px solid var(--success);
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
   font-size: 0.85rem;
+}
+
+.status-eligible {
+  background: rgba(30, 226, 160, 0.15);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.status-cooldown {
+  background: rgba(232, 64, 87, 0.15);
+  color: var(--danger);
+  border: 1px solid var(--danger);
 }
 
 .thermometer-card {
@@ -163,7 +223,7 @@ body {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--gold-dark), var(--gold-primary), var(--accent-cyan));
-  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .metrics-grid {
@@ -271,6 +331,13 @@ body {
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   color: var(--gold-light);
+}
+
+.chip-active-target {
+  background: rgba(10, 200, 185, 0.2);
+  border-color: var(--accent-cyan);
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .app-footer {

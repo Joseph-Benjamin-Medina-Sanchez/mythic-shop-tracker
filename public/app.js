@@ -1,10 +1,79 @@
-document.addEventListener('DOMContentLoaded', () => {
-  fetchMetrics();
+let fullCatalog = [];
+let currentTargetId = '';
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await initializeApp();
 });
 
-async function fetchMetrics() {
+async function initializeApp() {
+  await loadCatalog();
+  await fetchMetrics(currentTargetId);
+  setupListeners();
+}
+
+async function loadCatalog() {
   try {
-    const res = await fetch('/api/metrics');
+    const res = await fetch('/api/catalog');
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+    fullCatalog = await res.json();
+    if (fullCatalog.length > 0 && !currentTargetId) {
+      currentTargetId = fullCatalog[0].id;
+    }
+    renderSelectOptions(fullCatalog);
+  } catch (error) {
+    console.error('Error loading catalog:', error);
+  }
+}
+
+function renderSelectOptions(items) {
+  const select = document.getElementById('chromaSelect');
+  select.innerHTML = '';
+
+  items.forEach((chroma) => {
+    const opt = document.createElement('option');
+    opt.value = chroma.id;
+    opt.textContent = `${chroma.champion} - ${chroma.name}`;
+    if (chroma.id === currentTargetId) {
+      opt.selected = true;
+    }
+    select.appendChild(opt);
+  });
+}
+
+function setupListeners() {
+  const select = document.getElementById('chromaSelect');
+  const searchInput = document.getElementById('chromaSearch');
+
+  select.addEventListener('change', (e) => {
+    currentTargetId = e.target.value;
+    fetchMetrics(currentTargetId);
+  });
+
+  searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase().trim();
+    const filtered = fullCatalog.filter(
+      (item) =>
+        item.champion.toLowerCase().includes(term) ||
+        item.name.toLowerCase().includes(term)
+    );
+
+    renderSelectOptions(filtered);
+
+    if (filtered.length > 0) {
+      const match = filtered.find((i) => i.id === currentTargetId) || filtered[0];
+      currentTargetId = match.id;
+      select.value = currentTargetId;
+      fetchMetrics(currentTargetId);git 
+    }
+  });
+}
+
+async function fetchMetrics(targetId) {
+  try {
+    const url = targetId ? `/api/metrics?targetId=${encodeURIComponent(targetId)}` : '/api/metrics';
+    const res = await fetch(url);
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${res.status}`);
     }
@@ -22,7 +91,10 @@ function renderDashboard(data) {
   document.getElementById('targetName').innerText = target.name;
   document.getElementById('targetChampion').innerText = target.champion;
   document.getElementById('targetCost').innerText = target.costMe;
-  document.getElementById('targetStatus').innerText = metrics.status;
+
+  const statusEl = document.getElementById('targetStatus');
+  statusEl.innerText = metrics.status;
+  statusEl.className = 'meta-item status-pill ' + (metrics.isEligible ? 'status-eligible' : 'status-cooldown');
 
   const percentage = metrics.nextWeekProbability;
   document.getElementById('probPercent').innerText = `${percentage}%`;
@@ -48,7 +120,7 @@ function renderDashboard(data) {
     chips.className = 'rotation-chips';
     rotation.chromas.forEach((chroma) => {
       const chip = document.createElement('span');
-      chip.className = 'chip';
+      chip.className = 'chip' + (chroma.id === target.id ? ' chip-active-target' : '');
       chip.innerText = `${chroma.name} (${chroma.champion})`;
       chips.appendChild(chip);
     });

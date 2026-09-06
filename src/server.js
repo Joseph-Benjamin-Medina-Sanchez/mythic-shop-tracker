@@ -22,18 +22,24 @@ const targetZed = new Chroma({
 });
 
 const catalog = [targetZed];
+const championsPool = [
+  'Sylas', 'Darius', 'Yasuo', 'Pyke', 'Kayn', 
+  'Aatrox', 'Vayne', 'Riven', 'Lee Sin', 'Katarina', 
+  'Akali', 'Yone', 'Pantheon', 'Mordekaiser', 'Sett'
+];
+
 for (let i = 1; i < 120; i++) {
+  const champ = championsPool[i % championsPool.length];
   catalog.push(
     new Chroma({
       id: `chroma_${i}`,
       name: `Evento Chroma #${i}`,
-      champion: `Champion_${i}`,
+      champion: champ,
       costMe: 35,
     })
   );
 }
 
-const history = [];
 const dates = [
   '2026-08-07',
   '2026-08-14',
@@ -42,6 +48,7 @@ const dates = [
   '2026-09-04',
 ];
 
+const history = [];
 let itemIndex = 1;
 for (let week = 0; week < 5; week++) {
   const weeklyBatch = [];
@@ -58,15 +65,33 @@ for (let week = 0; week < 5; week++) {
 
 const engine = new ProbabilityEngine(catalog, 8);
 
+app.get('/api/catalog', (req, res) => {
+  res.json(
+    catalog.map((c) => ({
+      id: c.id,
+      name: c.name,
+      champion: c.champion,
+      costMe: c.costMe,
+    }))
+  );
+});
+
 app.get('/api/metrics', (req, res) => {
-  const metrics = engine.calculateMetrics(history, targetZed.id);
+  const targetId = req.query.targetId || targetZed.id;
+  const target = catalog.find((c) => c.id === targetId);
+
+  if (!target) {
+    return res.status(404).json({ error: 'Cosmético no encontrado en el catálogo.' });
+  }
+
+  const metrics = engine.calculateMetrics(history, target.id);
 
   res.json({
     target: {
-      id: targetZed.id,
-      name: targetZed.name,
-      champion: targetZed.champion,
-      costMe: targetZed.costMe,
+      id: target.id,
+      name: target.name,
+      champion: target.champion,
+      costMe: target.costMe,
     },
     metrics,
     history: history.map((rot) => ({
