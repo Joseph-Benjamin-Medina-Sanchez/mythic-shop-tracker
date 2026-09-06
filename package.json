@@ -4,9 +4,14 @@
   "description": "Discrete probability estimator and rotation tracking web dashboard for League of Legends Mythic Shop cosmetics.",
   "type": "module",
   "main": "src/server.js",
+
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  
   "scripts": {
     "start": "node src/server.js",
-    "cli": "node src/index.js",
+    "migrate": "node scripts/migrate.js",
     "test": "node --test"
   },
   "keywords": [

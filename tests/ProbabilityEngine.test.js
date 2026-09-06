@@ -49,3 +49,35 @@ test('ProbabilityEngine: La probabilidad es 0% si el item ya salió en el ciclo'
   assert.equal(metrics.nextWeekProbability, 0.0);
   assert.equal(metrics.isEligible, false);
 });
+
+test('ProbabilityEngine: calcula los días transcurridos desde la última aparición', () => {
+  const target = new Chroma({ id: 'target_zed', name: 'Crimson Zed', champion: 'Zed' });
+  const filler = new Chroma({ id: 'filler_1', name: 'Filler', champion: 'Champ' });
+  const catalog = [target, filler];
+  const engine = new ProbabilityEngine(catalog, 8);
+
+  const history = [
+    new WeeklyRotation({
+      date: '2026-01-01',
+      chromas: [target],
+    }),
+  ];
+
+  const referenceDate = new Date('2026-01-11T00:00:00Z');
+  const metrics = engine.calculateMetrics(history, target.id, referenceDate);
+
+  assert.equal(metrics.lastSeenDate, '2026-01-01');
+  assert.equal(metrics.daysSinceLastSeen, 10);
+});
+
+test('ProbabilityEngine: daysSinceLastSeen es null si nunca ha aparecido', () => {
+  const target = new Chroma({ id: 'target_zed', name: 'Crimson Zed', champion: 'Zed' });
+  const filler = new Chroma({ id: 'filler_1', name: 'Filler', champion: 'Champ' });
+  const catalog = [target, filler];
+  const engine = new ProbabilityEngine(catalog, 8);
+
+  const metrics = engine.calculateMetrics([], target.id);
+
+  assert.equal(metrics.lastSeenDate, null);
+  assert.equal(metrics.daysSinceLastSeen, null);
+});

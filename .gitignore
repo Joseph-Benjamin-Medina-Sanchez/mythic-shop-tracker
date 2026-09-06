@@ -5,3 +5,5 @@ node_modules/
 Thumbs.db
 *.log
 coverage/
+data/*.db
+data/*.db-journal
