@@ -1,8 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { StorageService } from './services/StorageService.js';
-import { SyncService } from './services/SyncService.js';
+import { DatabaseService } from './services/DatabaseService.js';
 import { ProbabilityEngine } from './engine/ProbabilityEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,21 +13,16 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
-const storage = new StorageService(path.join(__dirname, '../data'));
-const syncService = new SyncService(storage);
+const db = new DatabaseService(path.join(__dirname, '../data/mythic.db'));
 
 let catalog = [];
 let history = [];
 let engine = null;
 
-async function bootstrap() {
-  catalog = await storage.loadCatalog();
-  history = await storage.loadHistory(catalog);
+function refreshState() {
+  catalog = db.getCatalog();
+  history = db.getHistory();
   engine = new ProbabilityEngine(catalog, 8);
-
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
 }
 
 app.get('/api/catalog', (req, res) => {
@@ -40,6 +34,35 @@ app.get('/api/catalog', (req, res) => {
       costMe: c.costMe,
     }))
   );
+});
+
+app.get('/api/rotations', (req, res) => {
+  res.json(history);
+});
+
+app.post('/api/rotations', (req, res) => {
+  const { date, chromaIds } = req.body ?? {};
+
+  if (!date || typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({ error: 'La fecha debe tener el formato YYYY-MM-DD.' });
+  }
+
+  if (!Array.isArray(chromaIds) || chromaIds.length === 0) {
+    return res.status(400).json({ error: 'Se requiere al menos un chroma en chromaIds.' });
+  }
+
+  const unknownIds = chromaIds.filter((id) => !db.findChroma(id));
+  if (unknownIds.length > 0) {
+    return res.status(400).json({ error: `IDs no encontrados en el catálogo: ${unknownIds.join(', ')}` });
+  }
+
+  const insertedId = db.insertRotation(date, 'manual', chromaIds);
+  if (insertedId === null) {
+    return res.status(409).json({ error: `Ya existe una rotación registrada para ${date}.` });
+  }
+
+  refreshState();
+  res.status(201).json({ message: 'Rotación registrada correctamente.', date, count: chromaIds.length });
 });
 
 app.get('/api/metrics', (req, res) => {
@@ -67,30 +90,16 @@ app.get('/api/metrics', (req, res) => {
     history: history.map((rot) => ({
       date: rot.date,
       count: rot.chromas.length,
-      chromas: rot.chromas.map((c) => ({
-        id: c.id,
-        name: c.name,
-        champion: c.champion,
-      })),
+      chromas: rot.chromas,
     })),
   });
 });
 
-app.post('/api/sync', async (req, res) => {
-  try {
-    const result = await syncService.sync();
-    catalog = result.catalog;
-    history = result.history;
-    engine = new ProbabilityEngine(catalog, 8);
-
-    res.json({
-      message: result.isNewRotation ? 'Nueva rotación registrada.' : 'La rotación de hoy ya estaba registrada.',
-      date: result.date,
-      count: result.count,
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Fallo al sincronizar con la fuente en vivo.' });
-  }
+app.post('/api/sync', (req, res) => {
+  res.status(501).json({ message: 'Sincronización automática pendiente. Registra la rotación manualmente por ahora.' });
 });
 
-bootstrap();
+refreshState();
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
