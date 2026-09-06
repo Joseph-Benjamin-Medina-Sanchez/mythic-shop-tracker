@@ -1,0 +1,29 @@
+[
+  {
+    "date": "2026-08-07",
+    "chromaIds": [
+      "darius_dreadnova_event",
+      "yasuo_true_damage_prestige",
+      "pyke_soul_fighter_event",
+      "kayn_nightbringer_event"
+    ]
+  },
+  {
+    "date": "2026-08-14",
+    "chromaIds": [
+      "aatrox_blood_moon_prestige",
+      "pantheon_ashen_conqueror_mythic",
+      "sett_firecracker_event",
+      "akali_kda_allout_event"
+    ]
+  },
+  {
+    "date": "2026-08-21",
+    "chromaIds": [
+      "yone_dawnbringer_event",
+      "mordekaiser_project_event",
+      "riven_spirit_blossom_event",
+      "vayne_sentinel_event"
+    ]
+  }
+]

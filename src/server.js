@@ -1,8 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Chroma } from './models/Chroma.js';
-import { WeeklyRotation } from './models/WeeklyRotation.js';
+import { StorageService } from './services/StorageService.js';
 import { ProbabilityEngine } from './engine/ProbabilityEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,56 +13,21 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.json());
 
-const targetZed = new Chroma({
-  id: 'zed_galaxy_slayer_mythic',
-  name: 'Proyección Carmesí (Exterminador Galáctico)',
-  champion: 'Zed',
-  costMe: 35,
-});
+const storage = new StorageService(path.join(__dirname, '../data'));
 
-const catalog = [targetZed];
-const championsPool = [
-  'Sylas', 'Darius', 'Yasuo', 'Pyke', 'Kayn', 
-  'Aatrox', 'Vayne', 'Riven', 'Lee Sin', 'Katarina', 
-  'Akali', 'Yone', 'Pantheon', 'Mordekaiser', 'Sett'
-];
+let catalog = [];
+let history = [];
+let engine = null;
 
-for (let i = 1; i < 120; i++) {
-  const champ = championsPool[i % championsPool.length];
-  catalog.push(
-    new Chroma({
-      id: `chroma_${i}`,
-      name: `Evento Chroma #${i}`,
-      champion: champ,
-      costMe: 35,
-    })
-  );
+async function bootstrap() {
+  catalog = await storage.loadCatalog();
+  history = await storage.loadHistory(catalog);
+  engine = new ProbabilityEngine(catalog, 8);
+
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
 }
-
-const dates = [
-  '2026-08-07',
-  '2026-08-14',
-  '2026-08-21',
-  '2026-08-28',
-  '2026-09-04',
-];
-
-const history = [];
-let itemIndex = 1;
-for (let week = 0; week < 5; week++) {
-  const weeklyBatch = [];
-  for (let slot = 0; slot < 8; slot++) {
-    weeklyBatch.push(catalog[itemIndex++]);
-  }
-  history.push(
-    new WeeklyRotation({
-      date: dates[week],
-      chromas: weeklyBatch,
-    })
-  );
-}
-
-const engine = new ProbabilityEngine(catalog, 8);
 
 app.get('/api/catalog', (req, res) => {
   res.json(
@@ -77,7 +41,11 @@ app.get('/api/catalog', (req, res) => {
 });
 
 app.get('/api/metrics', (req, res) => {
-  const targetId = req.query.targetId || targetZed.id;
+  if (!catalog.length || !engine) {
+    return res.status(503).json({ error: 'Servicio en inicialización.' });
+  }
+
+  const targetId = req.query.targetId || catalog[0].id;
   const target = catalog.find((c) => c.id === targetId);
 
   if (!target) {
@@ -106,6 +74,4 @@ app.get('/api/metrics', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+bootstrap();

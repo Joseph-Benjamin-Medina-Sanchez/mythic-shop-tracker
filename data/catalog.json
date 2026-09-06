@@ -1,0 +1,114 @@
+[
+  {
+    "id": "zed_galaxy_slayer_mythic",
+    "name": "Proyección Carmesí (Exterminador Galáctico)",
+    "champion": "Zed",
+    "costMe": 35,
+    "isMythic": true
+  },
+  {
+    "id": "sylas_project_prestige",
+    "name": "PROYECTO: Sylas Prestigioso (Chroma)",
+    "champion": "Sylas",
+    "costMe": 35,
+    "isMythic": true
+  },
+  {
+    "id": "darius_dreadnova_event",
+    "name": "Darius Nova Terrorífica (Élite)",
+    "champion": "Darius",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "yasuo_true_damage_prestige",
+    "name": "True Damage Yasuo (Vívido)",
+    "champion": "Yasuo",
+    "costMe": 35,
+    "isMythic": true
+  },
+  {
+    "id": "pyke_soul_fighter_event",
+    "name": "Pyke Peleador Álmico (Ilimitado)",
+    "champion": "Pyke",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "kayn_nightbringer_event",
+    "name": "Kayn Heraldo del Caos (Abisal)",
+    "champion": "Kayn",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "aatrox_blood_moon_prestige",
+    "name": "Aatrox Luna de Sangre (Prestigioso)",
+    "champion": "Aatrox",
+    "costMe": 35,
+    "isMythic": true
+  },
+  {
+    "id": "pantheon_ashen_conqueror_mythic",
+    "name": "Pantheon Conquistador de la Ceniza (Emberwoken)",
+    "champion": "Pantheon",
+    "costMe": 35,
+    "isMythic": true
+  },
+  {
+    "id": "sett_firecracker_event",
+    "name": "Sett Petardos (Festivo)",
+    "champion": "Sett",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "akali_kda_allout_event",
+    "name": "Akali K/DA ALL OUT (Baddest)",
+    "champion": "Akali",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "yone_dawnbringer_event",
+    "name": "Yone Portador del Amanecer (Resplandor)",
+    "champion": "Yone",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "mordekaiser_project_event",
+    "name": "PROYECTO: Mordekaiser (Sobrecarga)",
+    "champion": "Mordekaiser",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "riven_spirit_blossom_event",
+    "name": "Riven Flor Espiritual (Nochebuena)",
+    "champion": "Riven",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "vayne_sentinel_event",
+    "name": "Vayne Centinela (Resolución)",
+    "champion": "Vayne",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "lee_sin_storm_dragon_event",
+    "name": "Lee Sin Dragón de la Tormenta (Garras)",
+    "champion": "Lee Sin",
+    "costMe": 35,
+    "isMythic": false
+  },
+  {
+    "id": "katarina_battle_queen_event",
+    "name": "Katarina Reina Guerrera (Coronación)",
+    "champion": "Katarina",
+    "costMe": 35,
+    "isMythic": false
+  }
+]
